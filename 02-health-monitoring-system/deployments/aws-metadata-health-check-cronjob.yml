@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aws-metadata-app-health-check-job
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: endpoint-health-check
+            image: pravin21/health-monitoring-app:latest
+            env:
+            - name: ENDPOINT
+              value: "http://aws-metadata-webapp-1038166563.ap-south-1.elb.amazonaws.com"
+            - name: API_PATH
+              value: "/" 
+            - name: EXPECTED_STATUS
+              value: "200" 
+            - name: TIMEOUT
+              value: "5"
+            - name: RECEIVER_EMAIL
+              value: "kspravin1997@gmail.com"
+          restartPolicy: OnFailure
